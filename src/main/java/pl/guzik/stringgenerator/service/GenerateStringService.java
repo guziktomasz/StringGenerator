@@ -3,7 +3,10 @@ package pl.guzik.stringgenerator.service;
 import pl.guzik.stringgenerator.domain.ResultOfTheGeneration;
 import pl.guzik.stringgenerator.generationParameters.GenerationParameters;
 
+import java.io.FileNotFoundException;
+import java.util.Set;
+
 public interface GenerateStringService {
 
-    ResultOfTheGeneration generateString (GenerationParameters generationParameters);
+    Set<String> generateString (GenerationParameters generationParameters) throws FileNotFoundException;
 }
