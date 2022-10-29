@@ -5,10 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 @Getter
@@ -21,12 +18,14 @@ public class ResultsOfGenerate {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    private int taskNumber;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "taskNumber")
+    private TasksOfGenerate tasksOfGenerate;
 
     private String generatedString;
 
-    public ResultsOfGenerate(int taskNumber, String generatedString) {
-        this.taskNumber = taskNumber;
+    public ResultsOfGenerate(TasksOfGenerate tasksOfGenerate, String generatedString) {
+        this.tasksOfGenerate = tasksOfGenerate;
         this.generatedString = generatedString;
     }
 

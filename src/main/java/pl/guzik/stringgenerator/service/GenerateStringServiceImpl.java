@@ -67,8 +67,11 @@ public class GenerateStringServiceImpl implements GenerateStringService{
                 +"task_"
                 + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss"))),
                 resultSet);
-        saveTaskToDatabase(numberOfTask, generationParameters.getMinLength(), generationParameters.getMaxLength());
-        saveResultToDatabase(numberOfTask, resultSet);
+        TasksOfGenerate tasksOfGenerate = new TasksOfGenerate(numberOfTask,
+                generationParameters.getMinLength(),
+                generationParameters.getMaxLength());
+        saveTaskToDatabase(tasksOfGenerate);
+        saveResultToDatabase(tasksOfGenerate, resultSet);
         return resultSet;
     }
 
@@ -91,15 +94,14 @@ public class GenerateStringServiceImpl implements GenerateStringService{
 
     }
 
-    public void saveTaskToDatabase (int taskNumber, int minLength, int maxLenth){
-        TasksOfGenerate newTask = new TasksOfGenerate(taskNumber, minLength, maxLenth);
-        repositoryTasks.save(newTask);
+    public void saveTaskToDatabase (TasksOfGenerate tasksOfGenerate){
+        repositoryTasks.save(tasksOfGenerate);
     }
 
-    public void saveResultToDatabase (int taskNumber, Set<String> resultSet) {
+    public void saveResultToDatabase (TasksOfGenerate tasksOfGenerate, Set<String> resultSet) {
         Iterator<String> resultSetIterator = resultSet.iterator();
         while (resultSetIterator.hasNext()){
-            ResultsOfGenerate newResult = new ResultsOfGenerate(taskNumber, resultSetIterator.next());
+            ResultsOfGenerate newResult = new ResultsOfGenerate(tasksOfGenerate, resultSetIterator.next());
             repositoryResults.save(newResult);
         }
     }

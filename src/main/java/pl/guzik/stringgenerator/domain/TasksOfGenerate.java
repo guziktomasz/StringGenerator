@@ -27,6 +27,8 @@ public class TasksOfGenerate {
 
     private int maxLength;
 
+
+
     public TasksOfGenerate(int taskNumber, int minLength, int maxLength) {
         this.taskNumber = taskNumber;
         this.minLength = minLength;
