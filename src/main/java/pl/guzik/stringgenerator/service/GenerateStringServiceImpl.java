@@ -1,15 +1,18 @@
 package pl.guzik.stringgenerator.service;
 
 import org.apache.commons.math3.util.CombinatoricsUtils;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
-import pl.guzik.stringgenerator.domain.ResultOfTheGeneration;
+import pl.guzik.stringgenerator.domain.ResultsOfGenerate;
+import pl.guzik.stringgenerator.domain.TasksOfGenerate;
 import pl.guzik.stringgenerator.generationParameters.GenerationParameters;
-import pl.guzik.stringgenerator.reposiotory.GenereteStringRepository;
+import pl.guzik.stringgenerator.reposiotory.ResultsOfGenerateRepository;
+import pl.guzik.stringgenerator.reposiotory.TasksOfGenerateRepository;
 
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Service
@@ -18,10 +21,13 @@ import java.util.*;
 //component adnotation to remove
 public class GenerateStringServiceImpl implements GenerateStringService{
 
-    private final GenereteStringRepository repository;
+    private final TasksOfGenerateRepository repositoryTasks;
+    private final ResultsOfGenerateRepository repositoryResults;
 
-    public GenerateStringServiceImpl(GenereteStringRepository repository) {
-        this.repository = repository;
+    private int numberOfTask = 0;
+    public GenerateStringServiceImpl(TasksOfGenerateRepository repository, ResultsOfGenerateRepository repositoryResults) {
+        this.repositoryTasks = repository;
+        this.repositoryResults = repositoryResults;
     }
 
     /*private int minLength = 5;
@@ -31,6 +37,7 @@ public class GenerateStringServiceImpl implements GenerateStringService{
 
     @Override
     public Set<String> generateString(GenerationParameters generationParameters) throws FileNotFoundException {
+        numberOfTask++;
         int i = 1;
         Set<String> resultSet = new HashSet<>();
         List<String> chars = new ArrayList<>();
@@ -56,40 +63,15 @@ public class GenerateStringServiceImpl implements GenerateStringService{
         System.out.println(resultSet);
         System.out.println(resultSet.size());
         System.out.println(calculatingNumberOfCombinations(2,3));
-        saveToFile("test", resultSet);
+        saveToFile((numberOfTask
+                +"task_"
+                + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss"))),
+                resultSet);
+        saveTaskToDatabase(numberOfTask, generationParameters.getMinLength(), generationParameters.getMaxLength());
+        saveResultToDatabase(numberOfTask, resultSet);
         return resultSet;
     }
 
-
-   /* @Bean
-    public ResultOfTheGeneration generateStringTest() throws FileNotFoundException {
-        *//*int i = 1;
-        Set<String> resultSet = new HashSet<>();
-        List<String> chars = new ArrayList<>();
-        do {
-            for (int l = 0; l < tableChar.length; l++) {
-                chars.add(String.valueOf(tableChar[l]));
-            }
-
-            String phrase = "";
-            Random number = new Random();
-            int stringLength = number.nextInt(maxLength-minLength+1) + minLength;
-            System.out.println("NR: " + i++);
-            for (int j = 0; j < stringLength; j++) {
-                Random position = new Random();
-                int positionOfChar = position.nextInt(chars.size());
-                phrase = phrase.concat(chars.get(positionOfChar));
-                chars.remove(positionOfChar);
-            }
-            resultSet.add(phrase);
-        } while (resultSet.size() < numberOfStrings);
-
-        System.out.println(resultSet);
-        System.out.println(resultSet.size());
-        System.out.println(calculatingNumberOfCombinations(2,3));
-        saveToFile("test", resultSet);
-        return null;*//*
-    }*/
 
     public int calculatingNumberOfCombinations (int minLength, int maxLength) {
         int result = 0;
@@ -107,5 +89,18 @@ public class GenerateStringServiceImpl implements GenerateStringService{
         }
         save.close();
 
+    }
+
+    public void saveTaskToDatabase (int taskNumber, int minLength, int maxLenth){
+        TasksOfGenerate newTask = new TasksOfGenerate(taskNumber, minLength, maxLenth);
+        repositoryTasks.save(newTask);
+    }
+
+    public void saveResultToDatabase (int taskNumber, Set<String> resultSet) {
+        Iterator<String> resultSetIterator = resultSet.iterator();
+        while (resultSetIterator.hasNext()){
+            ResultsOfGenerate newResult = new ResultsOfGenerate(taskNumber, resultSetIterator.next());
+            repositoryResults.save(newResult);
+        }
     }
 }

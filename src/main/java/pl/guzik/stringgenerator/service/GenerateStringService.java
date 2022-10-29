@@ -1,6 +1,5 @@
 package pl.guzik.stringgenerator.service;
 
-import pl.guzik.stringgenerator.domain.ResultOfTheGeneration;
 import pl.guzik.stringgenerator.generationParameters.GenerationParameters;
 
 import java.io.FileNotFoundException;

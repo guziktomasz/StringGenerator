@@ -2,7 +2,6 @@ package pl.guzik.stringgenerator.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import pl.guzik.stringgenerator.domain.ResultOfTheGeneration;
 import pl.guzik.stringgenerator.generationParameters.GenerationParameters;
 import pl.guzik.stringgenerator.service.GenerateStringService;
 

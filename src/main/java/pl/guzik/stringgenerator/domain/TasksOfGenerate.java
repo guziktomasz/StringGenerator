@@ -9,31 +9,31 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import java.util.Set;
 
 @Entity
 @Getter
 @Setter
 @ToString
 @EqualsAndHashCode
-public class ResultOfTheGeneration {
+public class TasksOfGenerate {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    private int numberOfTask;
+    private int taskNumber;
 
-    private String generatedString;
+    private int minLength;
 
+    private int maxLength;
 
-    public ResultOfTheGeneration(int id, int numberOfTask, String generatedString) {
-        this.id = id;
-        this.numberOfTask = numberOfTask;
-        this.generatedString = generatedString;
+    public TasksOfGenerate(int taskNumber, int minLength, int maxLength) {
+        this.taskNumber = taskNumber;
+        this.minLength = minLength;
+        this.maxLength = maxLength;
     }
 
-    public ResultOfTheGeneration() {
+    public TasksOfGenerate() {
 
     }
 }
