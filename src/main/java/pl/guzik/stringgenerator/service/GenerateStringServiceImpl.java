@@ -18,16 +18,17 @@ import java.util.*;
 @Service
 public class GenerateStringServiceImpl implements GenerateStringService{
 
-    private final TasksOfGenerateRepository repositoryTasks;
-    private final ResultsOfGenerateRepository repositoryResults;
 
+    private final TasksOfGenerateRepository repositoryTasks;
+
+    private final ResultsOfGenerateRepository repositoryResults;
     private int numberOfTask = 0;
     private int numberOfThread =0;
+
     public GenerateStringServiceImpl(TasksOfGenerateRepository repository, ResultsOfGenerateRepository repositoryResults) {
         this.repositoryTasks = repository;
         this.repositoryResults = repositoryResults;
     }
-
 
     @Override
     public Set<String> generateString(GenerationParameters generationParameters) throws FileNotFoundException {
